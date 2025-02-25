@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Host = ChangePond_Visitors_Backend_Application.Entities.Host;
 
 namespace ChangePond_Visitors_Backend_Application.Controllers
 {
@@ -48,6 +49,8 @@ namespace ChangePond_Visitors_Backend_Application.Controllers
         {
             var visitor = await _context.Visitors.Include(v => v.Host)
                                                  .FirstOrDefaultAsync(v => v.VisitorID == id);
+
+            var host = await _context.Hosts.FindAsync(visitor.HostID);
 
             if (visitor == null)
                 return NotFound(new { message = "Visitor not found" });

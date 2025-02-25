@@ -1,6 +1,7 @@
 ﻿using ChangePond_Visitors_Backend_Application.Entities;
 using ChangePond_Visitors_Backend_Application.RequestDtos;
 using ChangePond_Visitors_Backend_Application.ResponseDtos;
+using ChangePond_Visitors_Backend_Application.Services;
 
 namespace ChangePond_Visitors_Backend_Application.Converters
 {
@@ -8,6 +9,10 @@ namespace ChangePond_Visitors_Backend_Application.Converters
     {
         public static Visitor ToEntity(this VisitorRequestDto dto)
         {
+            // Generate QR Code based on visitor's details (you can customize the data format)
+            string qrCodeText = $"{dto.Name},{dto.ContactNumber},{dto.Email},{dto.Purpose}";
+            string qrCodeBase64 = QrCodeGeneratorHelper.GenerateQRCode(qrCodeText);
+
             return new Visitor
             {
                 Name = dto.Name,
@@ -17,7 +22,8 @@ namespace ChangePond_Visitors_Backend_Application.Converters
                 HostID = dto.HostID,
                 IDProof = dto.IDProof,
                 Status = "Pending",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                QRCode = qrCodeBase64 // ✅ Store QR code as Base64 string
             };
         }
 
